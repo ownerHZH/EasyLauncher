@@ -1,7 +1,9 @@
 package com.ihone.easylauncher;
 
 import com.ihome.adapter.FragementAdapter;
+import com.ihome.easylauncher.ui.SendMessageActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +23,14 @@ public class MainActivity extends FragmentActivity {
 	
 	private ViewPager viewPager;
 	private Button btnPhone,btnMessage;
+	private Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		context=MainActivity.this;
 		viewPager=(ViewPager) findViewById(R.id.viewPager);
 		btnPhone=(Button) findViewById(R.id.btnphone);
 		btnMessage=(Button) findViewById(R.id.btnmessage);
@@ -51,10 +55,13 @@ public class MainActivity extends FragmentActivity {
 				break;
             case R.id.btnmessage:
 				//发短信点击事件
-            	Intent mintent = new Intent(Intent.ACTION_MAIN);
+            	/*Intent mintent = new Intent(Intent.ACTION_MAIN);
             	mintent.addCategory(Intent.CATEGORY_DEFAULT);
             	mintent.setType("vnd.android-dir/mms-sms");
-            	startActivity(mintent);
+            	startActivity(mintent);*/
+            	Intent msg= new Intent();   
+            	msg.setClass(context, SendMessageActivity.class);
+				startActivity(msg); 
 				break;
 
 			default:
