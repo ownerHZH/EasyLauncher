@@ -82,7 +82,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="北京"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -91,7 +90,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="26-29℃"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -100,7 +98,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="天气"
                     android:textColor="#ffffff"
                     android:textSize="25sp" />
 
@@ -176,12 +173,18 @@
                 android:src="@drawable/icon_people_nohead" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/tvPersonone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="家人1"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvPersonOneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -201,12 +204,18 @@
                 android:src="@drawable/icon_people_nohead" />
 
             <TextView
-                android:id="@+id/TextView01"
+                android:id="@+id/tvPersonTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="家人2"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvPersonTwoNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -226,12 +235,18 @@
                 android:src="@drawable/icon_people_nohead" />
 
             <TextView
-                android:id="@+id/TextView02"
+                android:id="@+id/tvPersonThree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="家人3"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvPersonThreeNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

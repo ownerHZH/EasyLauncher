@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity {
 			case R.id.btnphone:
 				//打电话点击事件
 				Intent intent= new Intent(Intent.ACTION_DIAL);   
-				intent.setClassName("com.android.contacts","com.android.contacts.DialtactsActivity");
+				//intent.setClassName("com.android.contacts","com.android.contacts.DialtactsActivity");
 				startActivity(intent); 
 				break;
             case R.id.btnmessage:

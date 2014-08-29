@@ -48,7 +48,7 @@
             android:text="语音" />
 
         <Button
-            android:id="@+id/btnSend"
+            android:id="@+id/btnSendButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="发送短信" />

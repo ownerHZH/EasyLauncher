@@ -123,8 +123,10 @@ public class WebServiceHelper {
             httpTranstation.call(targetNameSpace+getWeatherbyCityName, envelope);
             SoapObject result=(SoapObject)envelope.getResponse();
             //下面对结果进行解析，结构类似json对象
-            bean=parserWeather(result);
-             
+            if(result!=null)
+            {
+            	bean=parserWeather(result);
+            }            
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -158,71 +160,85 @@ public class WebServiceHelper {
         //日期，
         String date=soapObject.getProperty(6).toString();
         //---------------------------------------------------
-        String weatherToday="今天：" + date.split(" ")[0];  
-        weatherToday+="\n天气："+ date.split(" ")[1]; 
-        weatherToday+="\n气温："+soapObject.getProperty(5).toString();
-        weatherToday+="\n风力："+soapObject.getProperty(7).toString();
-        weatherToday+="\n";
+        if(date!=null)
+        {
+        	String[] daw=date.split("日");
+        	if(daw!=null&&daw.length>0)
+        	{
+        		String weatherToday="今天：" + daw[0]+"日";  
+                weatherToday+="\n天气："+ daw[1]; 
+                weatherToday+="\n气温："+soapObject.getProperty(5).toString();
+                weatherToday+="\n风力："+soapObject.getProperty(7).toString();
+                weatherToday+="\n";
+                bean.setTodayTempeture(soapObject.getProperty(5).toString());
+                bean.setTodayWeather(daw[1]);
+                map.put("weatherDay", weatherToday);
+        	}       	
+        }
         
-        bean.setTodayTempeture(soapObject.getProperty(5).toString());
-        bean.setTodayWeather(date.split(" ")[1]);
-        
-        Log.e("今天",weatherToday);
         
         List<Integer> icons=new ArrayList<Integer>();
     
         icons.add(parseIcon(soapObject.getProperty(8).toString()));      
         icons.add(parseIcon(soapObject.getProperty(9).toString()));
-         
-        map.put("weatherDay", weatherToday);
+                 
         map.put("icons",icons);
         list.add(map);
-        
-        
-        
-
+                      
         //-------------------------------------------------
         map=new HashMap<String,Object>(); 
         date=soapObject.getProperty(13).toString();
-        String weatherTomorrow="明天：" + date.split(" ")[0];  
-        weatherTomorrow+="\n天气："+ date.split(" ")[1]; 
-        weatherTomorrow+="\n气温："+soapObject.getProperty(12).toString();
-        weatherTomorrow+="\n风力："+soapObject.getProperty(14).toString();
-        weatherTomorrow+="\n";
         
-        bean.setTomorrowTempeture(soapObject.getProperty(12).toString());
-        bean.setTomorrowWeather(date.split(" ")[1]);
-        
-        Log.e("今天",weatherTomorrow);
-        
-        icons=new ArrayList<Integer>();
-         
+        if(date!=null)
+        {
+        	String[] daw=date.split("日");
+        	if(daw!=null&&daw.length>0)
+        	{
+        		String weatherTomorrow="明天：" + daw[0]+"日";  
+                weatherTomorrow+="\n天气："+ daw[1]; 
+                weatherTomorrow+="\n气温："+soapObject.getProperty(12).toString();
+                weatherTomorrow+="\n风力："+soapObject.getProperty(14).toString();
+                weatherTomorrow+="\n";
+                
+                bean.setTomorrowTempeture(soapObject.getProperty(12).toString());
+                bean.setTomorrowWeather(daw[1]);               
+                map.put("weatherDay", weatherTomorrow);
+        	}       	
+        }
+                                            
+        icons=new ArrayList<Integer>();       
         icons.add(parseIcon(soapObject.getProperty(15).toString()));      
         icons.add(parseIcon(soapObject.getProperty(16).toString()));
-        
-        map.put("weatherDay", weatherTomorrow);
+               
         map.put("icons",icons);
         list.add(map);
         //--------------------------------------------------------------
         map=new HashMap<String,Object>(); 
         
         date=soapObject.getProperty(18).toString();
-        String weatherAfterTomorrow="后天：" + date.split(" ")[0];  
-        weatherAfterTomorrow+="\n天气："+ date.split(" ")[1]; 
-        weatherAfterTomorrow+="\n气温："+soapObject.getProperty(17).toString();
-        weatherAfterTomorrow+="\n风力："+soapObject.getProperty(19).toString();
-        weatherAfterTomorrow+="\n";
         
-        bean.setAfterTomorrowTempeture(soapObject.getProperty(17).toString());
-        bean.setAfterTomorrowWeather(date.split(" ")[1]);
-        
-        Log.e("今天",weatherAfterTomorrow);
-        
+        if(date!=null)
+        {
+        	String[] daw=date.split("日");
+        	if(daw!=null&&daw.length>0)
+        	{
+        		String weatherAfterTomorrow="后天：" + daw[0]+"日";  
+                weatherAfterTomorrow+="\n天气："+ daw[1]; 
+                weatherAfterTomorrow+="\n气温："+soapObject.getProperty(17).toString();
+                weatherAfterTomorrow+="\n风力："+soapObject.getProperty(19).toString();
+                weatherAfterTomorrow+="\n";
+                
+                bean.setAfterTomorrowTempeture(soapObject.getProperty(17).toString());
+                bean.setAfterTomorrowWeather(daw[1]);
+                
+                map.put("weatherDay", weatherAfterTomorrow);
+        	}       	
+        }
+                                                        
         icons=new ArrayList<Integer>();
         icons.add(parseIcon(soapObject.getProperty(20).toString()));      
         icons.add(parseIcon(soapObject.getProperty(21).toString()));
-        
-        map.put("weatherDay", weatherAfterTomorrow);
+                
         map.put("icons",icons);
         list.add(map); 
         //--------------------------------------------------------------

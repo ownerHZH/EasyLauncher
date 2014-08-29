@@ -2,9 +2,7 @@ package com.ihome.fragment;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -13,23 +11,29 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import com.ihome.easylauncher.basedao.ITellCreateContactComplete;
+import com.ihome.easylauncher.basedao.ITellToJump;
+import com.ihome.easylauncher.ui.AppsActivity;
+import com.ihome.easylauncher.ui.ChooseMemberActivity;
+import com.ihome.easylauncher.ui.ChooseWeatherCityActivity;
+import com.ihome.easylauncher.view.CreateNewContactDialog;
+import com.ihome.easylauncher.view.MemOptionDialog;
 import com.ihome.service.WeatherBean;
 import com.ihome.service.WebServiceHelper;
+import com.ihone.easylauncher.EasyLauncherApplication;
 import com.ihone.easylauncher.R;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.AlarmClock;
-import android.provider.MediaStore;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -41,7 +45,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class FirstFragment extends Fragment {
+public class FirstFragment extends Fragment implements ITellToJump,ITellCreateContactComplete{
 	
 	private TextView tvDate;//日期
 	private TextView tvTime;//时间
@@ -53,15 +57,24 @@ public class FirstFragment extends Fragment {
 	
 	private LinearLayout linCamera,linAlbum,
 	          linPersonOne,linPersonTwo,linPersonThree,linApps,linContacts;
+	private TextView tvpone,tvptwo,tvpthree;//三个成员名称
+	private TextView tvponen,tvptwon,tvpthreen;//三个成员的电话号码 为隐藏的。
 	
 	private Context context;//上下文
 	private FutureTask<WeatherBean> future;//处理耗时任务
+	private WebServiceHelper weatherHelper;
 	
 	private final Timer timer=new Timer(); //定时器
 	private TimerTask timerTask; //定时器处理任务
 	
+	MemOptionDialog memOptionDialog;//弹出操作框
+	
+	SharedPreferences sharedPreferences;
+			
 	private static final int REFRESH_WEATHER=0x321;//更新天气的标志
 	private static final int ALARM_ACTITY_REQUEST=0x322;//打开闹钟设置界面
+	public static final int CHOOSE_CONTACT_PERSON=0x323;//获取通讯录中的一个人
+	public static final int CHOOSE_WEATHER_CITY=0x324;//跳转到天气选择的界面
 	
 	//事件的接收、处理handler
 	private Handler handler=new Handler(){
@@ -71,7 +84,9 @@ public class FirstFragment extends Fragment {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case REFRESH_WEATHER:
-				refreshWeather("北京");//更新天气
+				//更新偏好设置中的城市天气 默认城市为 北京
+				String cstr=sharedPreferences.getString("WeatherCity", "北京");
+				refreshWeather(cstr);//更新天气
 				break;
 
 			default:
@@ -86,9 +101,11 @@ public class FirstFragment extends Fragment {
 			Bundle savedInstanceState) {
 		Log.e("onCreateView", "onCreateView--");
 		View view=inflater.inflate(R.layout.activity_first_fragment, container, false);
+		weatherHelper=new WebServiceHelper();//天气服务对象
+		sharedPreferences =EasyLauncherApplication.getDefaultSharedPreferences();//偏好设置
 		init(view);//初始化布局中的组件
 		registerBoradcastReceiver();//注册广播接收器
-		refreshWeather("北京");//更新天气
+		//refreshWeather("北京");//更新天气
 		timerTask=new TimerTask() {
 			
 			@Override
@@ -97,7 +114,7 @@ public class FirstFragment extends Fragment {
 			}
 		};
 		timer.schedule(timerTask, 0, 1000*60*60*3);//天气服务器是每2.5小时更新，我这里每三小时去更新一次天气状况
-		
+		getMemberInfo(1,2,3);//初始获取家庭成员信息
 		return view;
 	}
 	
@@ -112,26 +129,6 @@ public class FirstFragment extends Fragment {
 		{
 			tvAlarm.setText("闹钟  "+str);
 		}
-		/*final String tag_alarm = "tag_alarm";  
-		Uri uri = Uri.parse("content://com.android.alarmclock/alarm");  
-		Cursor c = context.getContentResolver().query(uri, null, null, null, null);  
-		Log.i(tag_alarm, "no of records are " + c.getCount());  
-		Log.i(tag_alarm, "no of columns are " + c.getColumnCount());  
-		if (c != null) {  
-		    String names[] = c.getColumnNames();  
-		    for (String temp : names) {  
-		        System.out.println(temp);  
-		    }  
-		    if (c.moveToFirst()) {  
-		        do {  
-		            for (int j = 0; j < c.getColumnCount(); j++) {  
-		                Log.i(tag_alarm, c.getColumnName(j)  
-		                        + " which has value " + c.getString(j));  
-		            }  
-		        } while (c.moveToNext());  
-		    }
-		    c.close();
-		}*/
 	}
 
 	/**
@@ -160,6 +157,14 @@ public class FirstFragment extends Fragment {
         linPersonThree=(LinearLayout) view.findViewById(R.id.linPersonthree);
         linApps=(LinearLayout) view.findViewById(R.id.linApps);
         linContacts=(LinearLayout) view.findViewById(R.id.linContacts);
+        
+        tvpone=(TextView) view.findViewById(R.id.tvPersonone);
+        tvptwo=(TextView) view.findViewById(R.id.tvPersonTwo);
+        tvpthree=(TextView) view.findViewById(R.id.tvPersonThree);
+        
+        tvponen=(TextView) view.findViewById(R.id.tvPersonOneNumber);
+        tvptwon=(TextView) view.findViewById(R.id.tvPersonTwoNumber);
+        tvpthreen=(TextView) view.findViewById(R.id.tvPersonThreeNumber);
 		
 		linDatetime.setOnClickListener(onclicklistener);
 		linWeather.setOnClickListener(onclicklistener);
@@ -201,9 +206,6 @@ public class FirstFragment extends Fragment {
 					picto.setImageResource(getRId(inL.get(1)));
 				}
 				
-			}else
-			{
-				Log.e("天气为空", "天气为空");
 			}
 		} catch (InterruptedException e) {
 			Log.e("InterruptedException", "InterruptedException");
@@ -264,7 +266,7 @@ public class FirstFragment extends Fragment {
 		@Override
 		public WeatherBean call() throws Exception {
 			// TODO Auto-generated method stub
-			return new WebServiceHelper().getWeatherByCity(city);
+			return weatherHelper.getWeatherByCity(city);
 		}
 		
 	}
@@ -284,42 +286,179 @@ public class FirstFragment extends Fragment {
 				
 			case R.id.linweather:
 				//天气选择点击事件
+				Intent weather=new Intent();
+				weather.setClass(context, ChooseWeatherCityActivity.class);
+				startActivityForResult(weather, CHOOSE_WEATHER_CITY);
 				break;
 				
 			case R.id.linAlbum:
 				//相册点击事件
-				Intent picture = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				startActivityForResult(picture, 1);
+			    Intent picture = new Intent();
+			    picture.setType("image/*");
+			    picture.setAction(Intent.ACTION_VIEW);
+			    startActivity(picture);
 				break;
 			case R.id.linApps:
 				//应用点击事件
+				Intent appIntent=new Intent();
+				appIntent.setClass(context, AppsActivity.class);
+				startActivity(appIntent);
 				break;
 			case R.id.linCamera:
 				//照相点击事件
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(); //调用照相机
+                intent.setAction("android.media.action.STILL_IMAGE_CAMERA");
+                startActivity(intent);
 				break;
 			case R.id.linContacts:
 				//联系人点击事件
-				Intent contactintent = new Intent(Intent.ACTION_PICK,android.provider.ContactsContract.Contacts.CONTENT_URI);
-				startActivityForResult(contactintent, 1);
+				Intent contactintent = new Intent();
+				contactintent.setAction(Intent.ACTION_VIEW);
+				contactintent.setData(ContactsContract.Contacts.CONTENT_URI);
+				contactintent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+                startActivity(contactintent);
 				break;
 			case R.id.linPersonone:
 				//家人1点击事件
+				//判断是否已经有成员
+				String isHaveMem1=tvponen.getText().toString().trim();
+				if(isHaveMem1==null||isHaveMem1=="")
+				{
+					Intent persononeIntent=new Intent();
+					persononeIntent.setClass(context, ChooseMemberActivity.class);
+					persononeIntent.putExtra("id", 1);
+					startActivityForResult(persononeIntent, CHOOSE_CONTACT_PERSON);
+				}else
+				{
+					//弹出框
+					if(memOptionDialog==null)
+					{
+						memOptionDialog=new MemOptionDialog(context,R.style.dialog,1);
+						memOptionDialog.show();	
+					}else if(!memOptionDialog.isShowing())
+					{
+						memOptionDialog.show();
+					}
+					memOptionDialog.setNameText(tvpone.getText().toString());
+					memOptionDialog.setNumberText(tvponen.getText().toString());
+					memOptionDialog.setiTellToJump(FirstFragment.this);
+					memOptionDialog.setId(1);
+				}
+				
 				break;
 			case R.id.linPersontwo:
 				//家人2点击事件
+				//判断是否已经有成员
+				String isHaveMem2=tvptwon.getText().toString().trim();
+				if(isHaveMem2==null||isHaveMem2=="")
+				{
+					Intent persontwoIntent=new Intent();
+					persontwoIntent.setClass(context, ChooseMemberActivity.class);
+					persontwoIntent.putExtra("id", 2);
+					startActivityForResult(persontwoIntent, CHOOSE_CONTACT_PERSON);
+				}else
+				{
+					//弹出框
+					if(memOptionDialog==null)
+					{
+						memOptionDialog=new MemOptionDialog(context,R.style.dialog,2);
+						memOptionDialog.show();	
+					}else if(!memOptionDialog.isShowing())
+					{
+						memOptionDialog.show();
+					}
+					memOptionDialog.setNameText(tvptwo.getText().toString());
+					memOptionDialog.setNumberText(tvptwon.getText().toString());
+					memOptionDialog.setiTellToJump(FirstFragment.this);
+					memOptionDialog.setId(2);
+				}
+				
 				break;
 			case R.id.linPersonthree:
 				//家人3点击事件
+				//判断是否已经有成员
+				String isHaveMem3=tvpthreen.getText().toString().trim();
+				if(isHaveMem3==null||isHaveMem3=="")
+				{
+					Intent personthreeIntent=new Intent();
+					personthreeIntent.setClass(context, ChooseMemberActivity.class);
+					personthreeIntent.putExtra("id", 3);
+					startActivityForResult(personthreeIntent, CHOOSE_CONTACT_PERSON);
+				}else
+				{
+					//弹出框
+					if(memOptionDialog==null)
+					{
+						memOptionDialog=new MemOptionDialog(context,R.style.dialog,3);
+						memOptionDialog.show();	
+					}else if(!memOptionDialog.isShowing())
+					{
+						memOptionDialog.show();
+					}
+					memOptionDialog.setNameText(tvpthree.getText().toString());
+					memOptionDialog.setNumberText(tvpthreen.getText().toString());
+					memOptionDialog.setiTellToJump(FirstFragment.this);
+					memOptionDialog.setId(3);
+				}
+				
 				break;
 
 			default:
 				break;
 			}
 		}
-	};
+	};	
 	
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode==CHOOSE_CONTACT_PERSON)
+		{
+			if(resultCode==Activity.RESULT_OK)
+			{
+				//获取设定的家庭成员
+				getMemberInfo(1,2,3);
+			}
+		}else if(requestCode==CHOOSE_WEATHER_CITY)
+		{
+			if(resultCode==Activity.RESULT_OK)
+			{
+				//更新所选择的城市天气
+				handler.sendEmptyMessage(REFRESH_WEATHER);
+			}
+		}
+	}
+
+	//获取在主界面显示的成员信息
+	private void getMemberInfo(int... args) {
+		//SharedPreferences sharedPreferences =EasyLauncherApplication.getDefaultSharedPreferences();
+		for(int i=0;i<args.length;i++)
+		{
+			String name=sharedPreferences.getString("phoneName"+args[i],"");
+			String number=sharedPreferences.getString("phoneNum"+args[i],"");
+			if(args[i]==1)
+			{
+				if(name!="")
+				   tvpone.setText(name);
+				tvponen.setText(number);
+			}else if(args[i]==2)
+			{
+				if(name!="")
+				   tvptwo.setText(name);
+				 tvptwon.setText(number);
+			}else if(args[i]==3)
+			{
+				if(name!="")
+				  tvpthree.setText(name);
+				tvpthreen.setText(number);
+			}
+				
+		}
+		
+	}
+
 	/**
 	 * 获取系统的日期
 	 * @return 2014-08-22
@@ -456,10 +595,42 @@ public class FirstFragment extends Fragment {
         context.registerReceiver(mBroadcastReceiver, myIntentFilter);  
     }
     
+    //绑定Activity
 	@Override
 	public void onAttach(Activity activity) {
 		Log.e("onAttach","onAttach--");
 		context=activity;
 		super.onAttach(activity);
-	}			
+	}
+
+	//回调函数 家庭成员选择替换操作的调用函数
+	@Override
+	public void jumpToChooseMemActivity(int id) {
+		Intent personthreeIntent=new Intent();
+		personthreeIntent.setClass(context, ChooseMemberActivity.class);
+		personthreeIntent.putExtra("id", id);
+		startActivityForResult(personthreeIntent, CHOOSE_CONTACT_PERSON);
+	}
+
+	//更新人员
+	@Override
+	public void tellToRefreshMember() {
+		getMemberInfo(1,2,3);
+	}
+
+	//编辑完成回调函数
+	@Override
+	public void createComplete() {
+		//编辑完成操作
+		getMemberInfo(1,2,3);
+	}
+
+	//通知打开编辑弹出框
+	@Override
+	public void tellToOpenCreateDialog(int id,String name1,String number1) {
+		CreateNewContactDialog createdialog=new CreateNewContactDialog(context,R.style.dialog,id);				
+		createdialog.show();
+		createdialog.setiTellCreateContactComplete(FirstFragment.this);//注册回调接口
+		createdialog.setNameNumber(name1, number1);
+	}	
 }
