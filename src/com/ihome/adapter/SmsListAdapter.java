@@ -3,7 +3,7 @@ package com.ihome.adapter;
 import java.util.List;
 
 import com.ihome.entity.SmsInfo;
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 
 import android.content.Context;
 import android.util.Log;
@@ -48,7 +48,7 @@ import android.widget.TextView;
 	            	holder=(ViewHolder) convertView.getTag();
 	            }
 			 holder.smsBody.setText(smsInfo.getSmsbody());
-			 if(smsInfo.getName()!=null)
+			 if(smsInfo.getName()!=null&&!smsInfo.getName().equals("0"))
 			 {
 				 holder.smsName.setText(smsInfo.getName()+"("+smsInfo.getPhoneNumber()+")"); 				 
 			 }else

@@ -1,8 +1,8 @@
 package com.ihome.adapter;
 
+import com.ihome.easylauncher.MainActivity;
 import com.ihome.fragment.FirstFragment;
 import com.ihome.fragment.SecondFragment;
-import com.ihone.easylauncher.MainActivity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

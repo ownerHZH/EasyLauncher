@@ -2,7 +2,7 @@ package com.ihome.adapter;
 
 import java.util.List;
 
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

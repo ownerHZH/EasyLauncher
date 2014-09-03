@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.ihome.adapter.AppsAdapter;
 import com.ihome.easylauncher.view.DeleteAppDialog;
-import com.ihone.easylauncher.R;
-import com.ihone.easylauncher.R.layout;
-import com.ihone.easylauncher.R.menu;
+import com.ihome.easylauncher.R;
+import com.ihome.easylauncher.R.layout;
+import com.ihome.easylauncher.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;

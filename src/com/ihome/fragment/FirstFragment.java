@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import com.ihome.easylauncher.EasyLauncherApplication;
 import com.ihome.easylauncher.basedao.ITellCreateContactComplete;
 import com.ihome.easylauncher.basedao.ITellToJump;
 import com.ihome.easylauncher.ui.AppsActivity;
@@ -20,8 +21,7 @@ import com.ihome.easylauncher.view.CreateNewContactDialog;
 import com.ihome.easylauncher.view.MemOptionDialog;
 import com.ihome.service.WeatherBean;
 import com.ihome.service.WebServiceHelper;
-import com.ihone.easylauncher.EasyLauncherApplication;
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -578,6 +578,11 @@ public class FirstFragment extends Fragment implements ITellToJump,ITellCreateCo
             }else if(action.equals(Intent.ACTION_TIME_TICK))
             {
         		tvTime.setText(getTime());
+        		tvDate.setText(getDate());
+            }else if(action.equals(Intent.ACTION_TIMEZONE_CHANGED))
+            {
+        		tvTime.setText(getTime());
+        		tvDate.setText(getDate());
             }
         }  
           
@@ -588,9 +593,11 @@ public class FirstFragment extends Fragment implements ITellToJump,ITellCreateCo
      */
     public void registerBoradcastReceiver(){  
         IntentFilter myIntentFilter = new IntentFilter();  
-        myIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);  
-        myIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-        myIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+        myIntentFilter.addAction(Intent.ACTION_DATE_CHANGED); //日期改变
+        myIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);//每秒改变一次
+        myIntentFilter.addAction(Intent.ACTION_TIME_TICK);//每分钟改变一次
+        myIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);//时区改变
+        
         //注册广播        
         context.registerReceiver(mBroadcastReceiver, myIntentFilter);  
     }

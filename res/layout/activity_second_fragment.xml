@@ -10,19 +10,40 @@
         android:layout_weight="1" >
 
         <LinearLayout
+            android:id="@+id/linNet"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/second_long_h" >
 
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="上网"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linNews"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/second_long_t" >
 
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="新闻"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -33,36 +54,77 @@
         android:layout_weight="1" >
 
         <LinearLayout
+            android:id="@+id/linMusic"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/three_long_t" >
 
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="听歌"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linRead"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/three_long_o" >
 
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="看书"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linMovie"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/three_long_f" >
+
+            <TextView
+                android:id="@+id/TextView04"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="视频"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linLight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/one_long_t" >
+
+        <TextView
+            android:id="@+id/TextView05"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="手电筒"
+            android:textColor="#ffffff"
+            android:textSize="30sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -71,18 +133,39 @@
         android:layout_weight="1" >
 
         <LinearLayout
+            android:id="@+id/linPosition"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/second_long_o" >
 
+            <TextView
+                android:id="@+id/TextView06"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="位置"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linSetting"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/second_long_f" >
+
+            <TextView
+                android:id="@+id/TextView07"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+
         </LinearLayout>
     </LinearLayout>
 

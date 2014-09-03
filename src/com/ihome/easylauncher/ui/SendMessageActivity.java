@@ -7,7 +7,7 @@ import com.ihome.adapter.SmsListAdapter;
 import com.ihome.entity.SmsInfo;
 import com.ihome.service.SmsContentService;
 import com.ihome.utils.Constants;
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -50,6 +50,7 @@ public class SendMessageActivity extends Activity {
 		
 		//smsService.getSmsInfoGroupByThreadId();//
 		lvMessage.setOnItemClickListener(onitemclicklistener);
+		//smsService.getThreadsInfo();//获取会话数量 讨巧做法
 	}
 	
 	private OnItemClickListener onitemclicklistener=new OnItemClickListener() {

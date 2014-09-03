@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ihone.easylauncher"
+    package="com.ihome.easylauncher"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -29,7 +29,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -45,17 +44,40 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_LOGS" >
+    </uses-permission>
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name="com.ihone.easylauncher.EasyLauncherApplication"
+        android:name="com.ihome.easylauncher.EasyLauncherApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/easy_launcher_h"
         android:label="@string/app_name"
         android:largeHeap="false"
         android:theme="@style/AppTheme" >
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.baidu.location.service_v2.2" >
+                </action>
+            </intent-filter>
+        </service>
+
+        <!-- meta-data需要写在application中 -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="dZ8BS80WiZWDyGH7jEWsZ9a9" />
+
         <activity
-            android:name="com.ihone.easylauncher.MainActivity"
+            android:name="com.ihome.easylauncher.MainActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -93,6 +115,26 @@
         <activity
             android:name="com.ihome.easylauncher.ui.ChooseWeatherCityActivity"
             android:label="@string/title_activity_choose_weather_city" >
+        </activity>
+        <activity
+            android:name="com.ihome.easylauncher.ui.NewsActivity"
+            android:label="@string/title_activity_news" >
+        </activity>
+        <activity
+            android:name="com.ihome.easylauncher.ui.NewsDetailActivity"
+            android:label="@string/title_activity_news_detail" >
+        </activity>
+        <activity
+            android:name="com.ihome.easylauncher.ui.FlashLightActivity"
+            android:label="@string/title_activity_flash_light" >
+        </activity>
+        <activity
+            android:name="com.ihome.easylauncher.ui.MusicListActivity"
+            android:label="@string/title_activity_music_list" >
+        </activity>
+        <activity
+            android:name="com.ihome.easylauncher.ui.BaiDuMapActivity"
+            android:label="@string/title_activity_bai_du_map" >
         </activity>
     </application>
 

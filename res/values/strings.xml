@@ -10,5 +10,10 @@
     <string name="title_activity_choose_member">ChooseMemberActivity</string>
     <string name="title_activity_message_detail">MessageDetailActivity</string>
     <string name="title_activity_choose_weather_city">ChooseWeatherCityActivity</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="title_activity_news_detail">NewsDetailActivity</string>
+    <string name="title_activity_flash_light">FlashLightActivity</string>
+    <string name="title_activity_music_list">MusicListActivity</string>
+    <string name="title_activity_bai_du_map">BaiDuMapActivity</string>
 
 </resources>

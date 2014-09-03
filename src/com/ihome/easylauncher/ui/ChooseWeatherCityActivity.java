@@ -7,12 +7,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import com.ihome.adapter.WeatherProvinceCityAdapter;
+import com.ihome.easylauncher.EasyLauncherApplication;
 import com.ihome.service.WeatherBean;
 import com.ihome.service.WebServiceHelper;
-import com.ihone.easylauncher.EasyLauncherApplication;
-import com.ihone.easylauncher.R;
-import com.ihone.easylauncher.R.layout;
-import com.ihone.easylauncher.R.menu;
+import com.ihome.easylauncher.R;
+import com.ihome.easylauncher.R.layout;
+import com.ihome.easylauncher.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;

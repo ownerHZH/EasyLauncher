@@ -22,5 +22,7 @@ public class Constants {
 	 * ≤›∏Âœ‰∂Ã–≈
 	 */
 	public static final String SMS_URI_DRAFT = "content://sms/draft";
+	
+	public static final String SMS_URI_CONVERSATION_COUNT="content://sms/conversations";
 
 }

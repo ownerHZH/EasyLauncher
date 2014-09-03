@@ -12,10 +12,8 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
-import com.ihome.utils.Constants;
 import com.ihome.utils.JsonParser;
-import com.ihone.easylauncher.EasyLauncherApplication;
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 
 import android.net.Uri;
 import android.os.Bundle;

@@ -146,4 +146,34 @@ public class SmsContentService {
     	}
         return infos;
     }
+    
+    //获取会话信息 讨巧的查询
+    public List<SmsInfo> getThreadsInfo()
+    {
+    	List<SmsInfo> infos=new ArrayList<SmsInfo>();
+    	String[] projection = new String[] { "* "+
+    	          " from threads "+"--"};
+        Cursor cusor = context.getContentResolver().query(Uri.parse(Constants.SMS_URI_ALL), projection, null, null,
+                null);
+        int threadidColumn = cusor.getColumnIndex("_id");
+        int message_countColumn = cusor.getColumnIndex("message_count");
+        int readcountColumn = cusor.getColumnIndex("readcount");
+        int snippetColumn = cusor.getColumnIndex("snippet");
+        if (cusor != null) {        	
+            while (cusor.moveToNext()) {
+            	SmsInfo smsInfo=new SmsInfo();
+            	smsInfo.setThread_id(cusor.getString(0));
+            	smsInfo.setMessage_count(cusor.getInt(message_countColumn));
+            	smsInfo.setReadcount(cusor.getInt(readcountColumn));
+            	smsInfo.setSmsbody(cusor.getString(snippetColumn));
+            	infos.add(smsInfo);
+            }
+            cusor.close();
+        }
+        for(int i=0;i<infos.size();i++)
+        {
+        	Log.e("SMS--",infos.get(i).toString());
+        }
+    	return infos;
+    }
 }

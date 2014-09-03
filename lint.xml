@@ -7,4 +7,5 @@
         <ignore path="src\com\ihome\easylauncher\view\CreateNewContactDialog.java" />
     </issue>
     <issue id="SdCardPath" severity="ignore" />
+    <issue id="SetJavaScriptEnabled" severity="ignore" />
 </lint>

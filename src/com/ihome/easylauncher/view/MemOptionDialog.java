@@ -1,12 +1,9 @@
 package com.ihome.easylauncher.view;
 
-import com.ihome.easylauncher.basedao.ITellCreateContactComplete;
+import com.ihome.easylauncher.EasyLauncherApplication;
 import com.ihome.easylauncher.basedao.ITellToJump;
-import com.ihome.easylauncher.ui.ChooseMemberActivity;
 import com.ihome.easylauncher.ui.MessageEditActivity;
-import com.ihome.fragment.FirstFragment;
-import com.ihone.easylauncher.EasyLauncherApplication;
-import com.ihone.easylauncher.R;
+import com.ihome.easylauncher.R;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,7 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowManager.LayoutParams;

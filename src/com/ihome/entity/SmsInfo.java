@@ -29,7 +29,29 @@ public class SmsInfo {
      * 短信类型1是接收到的，2是已发出
      */
     private String type;
-    public String getSmsbody() {
+    
+    /**
+     * 存储一个会话中共有多少条短信
+     */
+    int message_count;
+    /**
+     * 这个会话中已经读取的短信条数
+     */
+    int readcount;
+    
+    public int getReadcount() {
+		return readcount;
+	}
+	public void setReadcount(int readcount) {
+		this.readcount = readcount;
+	}
+	public int getMessage_count() {
+		return message_count;
+	}
+	public void setMessage_count(int message_count) {
+		this.message_count = message_count;
+	}
+	public String getSmsbody() {
         return smsbody;
     }
     public void setSmsbody(String smsbody) {
@@ -68,6 +90,13 @@ public class SmsInfo {
 	}
 	public void setThread_id(String thread_id) {
 		this.thread_id = thread_id;
+	}
+	@Override
+	public String toString() {
+		return "SmsInfo [smsbody=" + smsbody + ", phoneNumber=" + phoneNumber
+				+ ", thread_id=" + thread_id + ", date=" + date + ", name="
+				+ name + ", type=" + type + ", message_count=" + message_count
+				+ ", readcount=" + readcount + "]";
 	}
 
 }
