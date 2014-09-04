@@ -263,3 +263,26 @@ public class WebServiceHelper {
          //return ("a_"+data).split(".")[0]; 
      } 
 }
+/**
+ * http://www.weather.com.cn/data/sk/101010100.html
+   http://www.weather.com.cn/data/cityinfo/101010100.html
+
+ * http://m.weather.com.cn/atad/101040100.html
+ * 
+ * 1. XML接口 http://flash.weather.com.cn/wmaps/xml/china.xml 这个是全国天气的根节点，列出所有的省，其中的pyName字段是各个省XML的文件名，比如北京的是beijing，那就意味着北京的XML地址为 http://flash.weather.com.cn/wmaps/xml/beijing.xml 一个省的天气，其中列出该省各个市的数据，北京就列出各个区。 tmp1是最低温低，tmp2是最高温度，url非常重要，我们一会儿再说。state1和state2是神马转神马，每个数代表一个天气现象。天气现象非常多，我本想全部分析出来，后来直接放弃了这个想法。因为我看到了一个城市的天气现象的编码是26...我现在知道的有0.晴 1.多云 2.阴 6.雨夹雪 7.小雨 8.中雨 13.阵雪 14.小雪 其中后来发现知道这个没用，这个数字的主要作用是检索图片的！！！
+2. 图片接口 http://m.weather.com.cn/img/c0.gif http://m.weather.com.cn/img/b0.gif http://www.weather.com.cn/m/i/weatherpic/29x20/d0.gif http://www.weather.com.cn/m2/i/icon_weather/29x20/n00.gif 这个图就是天气现象0（晴）的图片，其他天气现象的图片依此类推。c打头的图片是20*20像素的，b打头的是50*46像素的，d打头的是反白的图标，29*20像素，n打头的是夜间反白图标，29*20像素，注意这里的文件名是两位数字！ 也许还有更多的图标，等待大家发掘啦~
+3. JSON接口 真没想到~居然有JSON接口~JSON在iPhone上分析起来要比XML简单很多 http://m.weather.com.cn/data/101010200.html 这个是北京的JSON数据，那个HTML的名字是根据上文XML中的url得到的。这个JSON中包含了实时数据、7天天气预报、气象指数等丰富的数据
+ 
+ 
+获取省级代码：http://www.weather.com.cn/data/list3/city.xml?level=1
+获取城市代码(比如安徽是22)：http://www.weather.com.cn/data/list3/city22.xml?level=2
+获取区域代码（比如安庆是2206）：http://www.weather.com.cn/data/list3/city2206.xml?level=3
+获取到安徽省安庆市望江县的代码是220607
+然后去加上中国代码请求URL：http://m.weather.com.cn/data/101220607.html
+就可以获取当地天气。
+另外再给几个有用的探索得到的URL：
+天气 FLASH实况：http://flash.weather.com.cn/sk2/101220607.xml
+实况FLASH：http://flash.weather.com.cn/sk2/shikuang.swf?id=101220607
+三级选择菜单（注明，这里有四个INPUT，其中有一个被隐藏了，可用FIREFOX改下源代码查看）：http://www.weather.com.cn/static/custom/search3.htm
+实时天气（很有用哦）：http://www.weather.com.cn/data/sk/101220607.html
+ */

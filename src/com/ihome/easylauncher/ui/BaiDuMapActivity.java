@@ -6,8 +6,12 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
+import com.baidu.mapapi.map.BaiduMap.OnMyLocationClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -28,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -68,9 +73,10 @@ public class BaiDuMapActivity extends Activity implements ITellLocation{
 	BaiduMap mBaiduMap;
 
 	// UI相关
-	OnCheckedChangeListener radioButtonListener;
 	Button requestLocButton;
 	boolean isFirstLoc = true;// 是否首次定位
+	private InfoWindow mInfoWindow;
+	BDLocation location;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,45 +122,60 @@ public class BaiDuMapActivity extends Activity implements ITellLocation{
 				}
 			}
 		};
-		requestLocButton.setOnClickListener(btnClickListener);
-
-		RadioGroup group = (RadioGroup) this.findViewById(R.id.radioGroup);
-		radioButtonListener = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				if (checkedId == R.id.defaulticon) {
-					// 传入null则，恢复默认图标
-					mCurrentMarker = null;
-					mBaiduMap
-							.setMyLocationConfigeration(new MyLocationConfiguration(
-									mCurrentMode, true, null));
-				}
-				if (checkedId == R.id.customicon) {
-					// 修改为自定义marker
-					mCurrentMarker = BitmapDescriptorFactory
-							.fromResource(R.drawable.icon_geo);
-					mBaiduMap
-							.setMyLocationConfigeration(new MyLocationConfiguration(
-									mCurrentMode, true, mCurrentMarker));
-				}
-			}
-		};
-		group.setOnCheckedChangeListener(radioButtonListener);
+		requestLocButton.setOnClickListener(btnClickListener);				
 
 		// 地图初始化
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
+		
+		// 修改为自定义marker
+		mCurrentMarker = BitmapDescriptorFactory
+				.fromResource(R.drawable.icon_geo);
+		mBaiduMap
+				.setMyLocationConfigeration(new MyLocationConfiguration(
+						mCurrentMode, true, mCurrentMarker));
+		//位置的点击事件
+		mBaiduMap.setOnMyLocationClickListener(new OnMyLocationClickListener() {
+			
+			@Override
+			public boolean onMyLocationClick() {
+				
+				return false;
+			}
+		});
+		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+			
+			@Override
+			public void onMapStatusChangeStart(MapStatus arg0) {
+				if(mInfoWindow!=null)
+				   mBaiduMap.hideInfoWindow();
+			}
+			
+			@Override
+			public void onMapStatusChangeFinish(MapStatus arg0) {
+				TextView tx=new TextView(context);
+				tx.setTextSize(20);
+				tx.setBackgroundResource(R.drawable.popup);
+				tx.setText(location.getAddrStr());
+				final LatLng ll = new LatLng(location.getLatitude(),
+						location.getLongitude());
+				Point p = mBaiduMap.getProjection().toScreenLocation(ll);
+				p.y -= 47;
+				LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
+				mInfoWindow = new InfoWindow(tx, llInfo, null);
+				mBaiduMap.showInfoWindow(mInfoWindow);
+			}
+			
+			@Override
+			public void onMapStatusChange(MapStatus arg0) {
+				//Log.e("地图状态改变==", "StatusChange");
+			}
+		});
 		// 定位初始化
 		mLocClient = ((EasyLauncherApplication)((Activity) context).getApplication()).mLocationClient;
 		((EasyLauncherApplication)((Activity) context).getApplication()).setiTellLocation(this);
-		/*mLocClient.registerLocationListener(myListener);
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true);// 打开gps
-		option.setCoorType("bd09ll"); // 设置坐标类型
-		option.setScanSpan(1000);
-		mLocClient.setLocOption(option);*/
 		mLocClient.start();
 	}	
 
@@ -172,6 +193,8 @@ public class BaiDuMapActivity extends Activity implements ITellLocation{
 
 		@Override
 		protected void onDestroy() {
+			if(mReceiver!=null)
+			  unregisterReceiver(mReceiver);
 			// 退出时销毁定位
 			mLocClient.stop();
 			// 关闭定位图层
@@ -193,10 +216,11 @@ public class BaiDuMapActivity extends Activity implements ITellLocation{
 		// map view 销毁后不在处理新接收的位置
 		if (location == null || mMapView == null)
 			return;
+		this.location=location;
 		MyLocationData locData = new MyLocationData.Builder()
 				.accuracy(location.getRadius())
 				// 此处设置开发者获取到的方向信息，顺时针0-360
-				.direction(100).latitude(location.getLatitude())
+				.direction(360).latitude(location.getLatitude())
 				.longitude(location.getLongitude()).build();
 		mBaiduMap.setMyLocationData(locData);
 		if (isFirstLoc) {

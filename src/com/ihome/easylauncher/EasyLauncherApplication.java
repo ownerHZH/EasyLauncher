@@ -2,7 +2,6 @@ package com.ihome.easylauncher;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
@@ -14,7 +13,6 @@ import com.ihome.utils.Constants;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class EasyLauncherApplication extends Application {
 	private static EasyLauncherApplication application;
